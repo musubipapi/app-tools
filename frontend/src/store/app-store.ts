@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { APPS } from "@/lib/consts";
-import { CheckWebP } from "../../wailsjs/go/main/App";
+import { CheckWebP } from "../../wailsjs/go/app/App";
 
 type AppType = (typeof APPS)[keyof typeof APPS];
 

@@ -6,7 +6,7 @@ import {
   SidebarGroupContent,
 } from "@/components/ui/sidebar";
 
-import { SelectFolder } from "../../../wailsjs/go/main/App";
+import { SelectFolder } from "../../../wailsjs/go/app/App";
 import { useAppStore } from "@/store/app-store";
 import { cn } from "@/lib/utils";
 

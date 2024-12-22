@@ -8,18 +8,35 @@ import {
 } from "@/components/ui/table";
 import { formatFileSize } from "@/lib/formatter";
 import { FileInfo, useFileStore } from "@/store/file-store";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Checkbox } from "../ui/checkbox";
-import { Trash2Icon } from "lucide-react";
+import { CheckIcon, Loader2Icon, Trash2Icon, XIcon } from "lucide-react";
+import { ConversionStatus } from "@/lib/types";
 
-interface ListTableProps {
-  files: FileInfo[];
-}
+interface ListTableProps {}
 
-export const ListTable: FC<ListTableProps> = ({ files }) => {
-  const { removeFile } = useFileStore();
+const actionComponent = (status: ConversionStatus) => {
+  switch (status) {
+    case ConversionStatus.Pending:
+      return <Trash2Icon className="w-4 h-4" />;
+    case ConversionStatus.Converting:
+      return <Loader2Icon className="w-4 h-4 animate-spin text-yellow-500" />;
+    case ConversionStatus.Completed:
+      return <CheckIcon className="w-4 h-4 text-green-500" />;
+    case ConversionStatus.Failed:
+      return <XIcon className="w-4 h-4 text-red-500" />;
+  }
+};
+
+export const ListTable: FC<ListTableProps> = () => {
+  const { removeFile, files } = useFileStore();
+  const [isHovered, setIsHovered] = useState<string | null>(null);
+  if (files.length === 0) {
+    return null;
+  }
+
   return (
-    <Table>
+    <Table className="select-none">
       <TableHeader>
         <TableRow>
           <TableHead className="w-6" />
@@ -32,11 +49,11 @@ export const ListTable: FC<ListTableProps> = ({ files }) => {
         {files.map((file) => (
           <TableRow key={file.id}>
             <TableCell className="p-2">
-              <div className="w-6 h-6 select-none">
+              <div className="w-6 h-6">
                 <img
                   src={file.url}
                   alt={file.name}
-                  className="w-6 h-6 object-contain select-none"
+                  className="w-6 h-6 object-contain"
                 />
               </div>
             </TableCell>
@@ -51,9 +68,16 @@ export const ListTable: FC<ListTableProps> = ({ files }) => {
             <TableCell>
               <div
                 onClick={() => removeFile(file.id)}
-                className="text-xs text-muted-foreground whitespace-nowrap hover:text-red-400 cursor-pointer"
+                onMouseOver={() => setIsHovered(file.id)}
+                onMouseOut={() => setIsHovered(null)}
+                className="text-xs text-muted-foreground whitespace-nowrap cursor-pointer"
               >
-                <Trash2Icon className="w-4 h-4" />
+                {isHovered === file.id &&
+                file.conversionStatus !== ConversionStatus.Converting ? (
+                  <Trash2Icon className="w-4 h-4 text-red-500" />
+                ) : (
+                  actionComponent(file.conversionStatus)
+                )}
               </div>
             </TableCell>
           </TableRow>

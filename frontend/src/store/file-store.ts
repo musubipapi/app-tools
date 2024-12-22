@@ -1,12 +1,14 @@
+import { ConversionStatus } from "@/lib/types";
 import { create } from "zustand";
 
 export interface FileInfo {
   id: string;
   name: string;
-  url: string;
   size: number;
   type: string;
-  lastModified: number;
+  url: string;
+  data: number[];
+  conversionStatus: ConversionStatus;
 }
 
 interface FileStore {
@@ -14,24 +16,39 @@ interface FileStore {
   addFile: (file: File) => Promise<void>;
   removeFile: (id: string) => void;
   clearFiles: () => void;
+  updateFileConversionStatus: (id: string, status: ConversionStatus) => void;
 }
 
 export const useFileStore = create<FileStore>((set) => ({
   files: [],
 
   addFile: async (file: File) => {
+    const data = await file.arrayBuffer();
+    const uint8Array = new Uint8Array(data);
+    const byteArray = Array.from(uint8Array);
     const fileInfo: FileInfo = {
       id: crypto.randomUUID(),
-      name: file.name,
       url: URL.createObjectURL(file),
+      data: byteArray,
+      name: file.name,
       size: file.size,
       type: file.type,
-      lastModified: file.lastModified,
+      conversionStatus: ConversionStatus.Pending,
     };
 
     set((state) => ({
       files: [...state.files, fileInfo],
     }));
+  },
+  updateFileConversionStatus: (id: string, status: ConversionStatus) => {
+    set((state) => {
+      const newState = {
+        files: state.files.map((file) =>
+          file.id === id ? { ...file, conversionStatus: status } : file
+        ),
+      };
+      return newState;
+    });
   },
 
   removeFile: (id: string) => {

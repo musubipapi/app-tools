@@ -1,6 +1,5 @@
 import { FC, useCallback } from "react";
 import { useDropzone } from "react-dropzone/.";
-import { SelectFile } from "../../../wailsjs/go/main/App";
 import { UploadIcon } from "lucide-react";
 import { useFileStore } from "../../store/file-store";
 
