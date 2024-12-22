@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Greet } from "../wailsjs/go/main/App";
 import { main } from "../wailsjs/go/models";
-import { Button } from "./components/ui/button";
-import Layout from "./components/layout";
-import { DragContainer } from "./components/drop-zone";
+import Layout from "./components/common/layout";
+import Png2Webp from "./components/png2webp/app";
+import { Toaster } from "sonner";
 
 function App() {
   const [resultText, setResultText] = useState(
@@ -26,11 +26,13 @@ function App() {
   }
 
   return (
-    <div id="App"> <div className="bg-slate-100 w-screen h-screen">
-      <Layout>
-        <DragContainer />
-      </Layout>
-    </div>
+    <div id="App">
+      <Toaster richColors />
+      <div className="bg-slate-100 w-screen h-screen">
+        <Layout>
+          <Png2Webp />
+        </Layout>
+      </div>
     </div>
   );
 }

@@ -5,7 +5,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
+} from "@/components/ui/select";
 import { APPS } from "@/lib/consts";
 import { useAppStore } from "@/store/app-store";
 
