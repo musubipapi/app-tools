@@ -4,11 +4,7 @@ import {models} from '../models';
 
 export function BatchConvertToWebP(arg1:Array<models.File>,arg2:string):Promise<void>;
 
-export function CheckWebP():Promise<boolean>;
-
 export function ConvertToWebP(arg1:models.File,arg2:string):Promise<void>;
-
-export function InstallWebP():Promise<boolean>;
 
 export function ReadFile(arg1:string):Promise<string>;
 

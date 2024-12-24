@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"fmt"
 
 	"app-tools/internal/models"
 	"app-tools/internal/services/file"
@@ -28,7 +29,11 @@ func NewApp() *App {
 // startup is called when the app starts. The context is saved
 func (a *App) Startup(ctx context.Context) {
 	a.ctx = ctx
-	a.webpService = webp.NewService(ctx)
+	webpService, err := webp.NewService(ctx)
+	if err != nil {
+		fmt.Println("Error initializing webp service:", err)
+	}
+	a.webpService = webpService
 }
 
 // SelectFolder opens a directory selection dialog
@@ -43,16 +48,6 @@ func (a *App) SelectFolder() (string, error) {
 // ReadFile exposes file reading functionality to the frontend
 func (a *App) ReadFile(path string) (string, error) {
 	return a.fileService.ReadFile(path)
-}
-
-// InstallWebP exposes webp installation functionality to the frontend
-func (a *App) InstallWebP() (bool, error) {
-	return a.webpService.InstallWebP()
-}
-
-// CheckWebP exposes webp check functionality to the frontend
-func (a *App) CheckWebP() bool {
-	return a.webpService.CheckWebP()
 }
 
 func (a *App) ConvertToWebP(file models.File, target_directory string) error {

@@ -1,0 +1,78 @@
+#!/bin/bash
+
+# Your app details
+APP_NAME="APP_NAME"
+DEVELOPER_ID="ID" # Get this from Keychain Access
+APPLE_ID="EMAIL"
+TEAM_ID="TEAM_ID" # From Apple Developer Portal
+APP_PASSWORD="PASSWORD"
+
+
+echo "🚀 Starting build process for $APP_NAME..."
+
+# Clean up previous builds
+echo "🧹 Cleaning up previous builds..."
+rm -rf "$APP_NAME.app" "$APP_NAME.zip" "$APP_NAME-final.zip" build/bin
+go clean -cache -modcache
+
+# Build the app
+echo "🏗️ Building application..."
+wails build -clean
+if [ $? -ne 0 ]; then
+    echo "❌ Wails build failed"
+    exit 1
+fi
+
+# Remove quarantine attributes
+echo "🔒 Removing quarantine attributes..."
+xattr -cr "./build/bin/$APP_NAME.app"
+
+# Verify entitlements file exists
+if [ ! -f "./build/darwin/entitlements.plist" ]; then
+    echo "❌ Entitlements file not found!"
+    exit 1
+fi
+
+# Sign the app
+echo "✍️ Signing application..."
+codesign --timestamp \
+         --options=runtime \
+         --force \
+         --deep \
+         -o runtime \
+         -s "$DEVELOPER_ID" \
+         -v \
+         --entitlements "./build/darwin/entitlements.plist" \
+         "./build/bin/$APP_NAME.app"
+
+# Verify signature
+echo "🔍 Verifying code signature..."
+codesign -vvv --deep --strict "./build/bin/$APP_NAME.app"
+if [ $? -ne 0 ]; then
+    echo "❌ Code signing verification failed"
+    exit 1
+fi
+
+# Create zip for notarization
+echo "📦 Creating zip for notarization..."
+ditto -c -k --keepParent "./build/bin/$APP_NAME.app" "$APP_NAME.zip"
+
+# Uncomment these sections when ready for notarization
+# echo "📤 Submitting for notarization..."
+# xcrun notarytool submit "$APP_NAME.zip" \
+#     --apple-id "$APPLE_ID" \
+#     --password "$APP_PASSWORD" \
+#     --team-id "$TEAM_ID" \
+#     --wait
+
+# echo "📥 Stapling ticket to application..."
+# xcrun stapler staple "./build/bin/$APP_NAME.app"
+
+# echo "📦 Creating final distribution zip..."
+# ditto -c -k --keepParent "./build/bin/$APP_NAME.app" "$APP_NAME-final.zip"
+
+echo "✅ Build process completed!"
+
+# Display final verification
+echo "🔍 Final verification of app bundle:"
+codesign -dvv "./build/bin/$APP_NAME.app"

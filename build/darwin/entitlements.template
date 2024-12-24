@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "https://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Enables the App Sandbox security feature -->
+    <key>com.apple.security.app-sandbox</key>
+    <true/>
+
+    <!-- Your app's unique identifier -->
+    <key>com.apple.application-identifier</key>
+    <string>{{.Env.TEAM_ID}}.com.wails.app-tools</string>
+
+    
+    <!-- File system permissions -->
+    <key>com.apple.security.files.user-selected.read-write</key>
+    <true/>
+    <key>com.apple.security.files.user-selected.executable</key>
+    <true/>
+    
+    <!-- Temp directory access for cwebp binary -->
+    <key>com.apple.security.temporary-exception.files.absolute-path.read-write</key>
+    <array>
+        <string>/var/folders/</string>
+        <string>/private/var/folders/</string>
+        <string>/private/tmp/</string>
+        <string>/tmp/</string>
+    </array>
+
+    <!-- Network permissions for Wails/WebKit -->
+    <key>com.apple.security.network.client</key>
+    <true/>
+    <key>com.apple.security.network.server</key>
+    <true/>
+
+    <!-- Required for WebKit process management -->
+    <key>com.apple.security.inherit</key>
+    <true/>
+
+    <!-- Add this new entitlement -->
+    <key>com.apple.security.temporary-exception.files.home-relative-path.read-write</key>
+    <array>
+        <string>/Library/Containers/{{.Env.TEAM_ID}}.com.wails.app-tools/</string>
+    </array>
+</dict>
+</plist>

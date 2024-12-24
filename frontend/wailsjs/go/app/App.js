@@ -6,16 +6,8 @@ export function BatchConvertToWebP(arg1, arg2) {
   return window['go']['app']['App']['BatchConvertToWebP'](arg1, arg2);
 }
 
-export function CheckWebP() {
-  return window['go']['app']['App']['CheckWebP']();
-}
-
 export function ConvertToWebP(arg1, arg2) {
   return window['go']['app']['App']['ConvertToWebP'](arg1, arg2);
-}
-
-export function InstallWebP() {
-  return window['go']['app']['App']['InstallWebP']();
 }
 
 export function ReadFile(arg1) {
