@@ -1,3 +1,30 @@
+# output
 build/bin
 node_modules
 frontend/dist
+
+# build
+build.sh
+*.zip
+build/darwin/Info.plist
+build/darwin/entitlements.plist
+build/darwin/helper-entitlements.plist
+
+# Environment files
+.env*
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+
+# Build artifacts
+*.pem
+*.key
+*.p12
+*.pfx
+*.cer
+
+# Logs
+*.log
+logs/

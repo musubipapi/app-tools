@@ -1,4 +1,4 @@
-module png2webp
+module app-tools
 
 go 1.21
 

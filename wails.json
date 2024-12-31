@@ -1,13 +1,13 @@
 {
   "$schema": "https://wails.io/schemas/config.v2.json",
-  "name": "png2webp",
-  "outputfilename": "png2webp",
-  "frontend:install": "npm install",
-  "frontend:build": "npm run build",
-  "frontend:dev:watcher": "npm run dev",
+  "name": "app-tools",
+  "outputfilename": "app-tools",
+  "frontend:install": "bun install",
+  "frontend:build": "bun run build",
+  "frontend:dev:watcher": "bun run dev",
   "frontend:dev:serverUrl": "auto",
   "author": {
     "name": "Andy Gao",
-    "email": "supagao7@gmail.com"
+    "email": "test@test.com"
   }
 }

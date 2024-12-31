@@ -1,49 +1,33 @@
 package main
 
 import (
+	"app-tools/internal/app"
 	"embed"
+	"log"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
-	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
-	"github.com/wailsapp/wails/v2/pkg/options/mac"
 )
 
-//go:embed all:frontend/dist
+//go:embed frontend/dist
 var assets embed.FS
 
 func main() {
-	// Create an instance of the app structure
-	app := NewApp()
+	app := app.NewApp()
 
-	// Create application with options
 	err := wails.Run(&options.App{
-		Title:  "webpy",
-		Width:  1024,
-		Height: 768,
-		AssetServer: &assetserver.Options{
-			Assets: assets,
-		},
-		Mac: &mac.Options{
-			TitleBar: &mac.TitleBar{
-				TitlebarAppearsTransparent: false,
-				HideTitle:                  true,
-				HideTitleBar:               false,
-				FullSizeContent:            true,
-				UseToolbar:                 true,
-				HideToolbarSeparator:       true,
-			},
-			WebviewIsTransparent: true, // Add this line
-			WindowIsTranslucent:  true,
-		},
-		BackgroundColour: &options.RGBA{R: 20, G: 38, B: 54, A: 1},
-		OnStartup:        app.startup,
+		Title:            "Cool App Tools",
+		Width:            1024,
+		Height:           768,
+		Assets:           assets,
+		BackgroundColour: &options.RGBA{R: 255, G: 255, B: 255, A: 1},
+		OnStartup:        app.Startup,
 		Bind: []interface{}{
 			app,
 		},
 	})
 
 	if err != nil {
-		println("Error:", err.Error())
+		log.Fatal(err)
 	}
 }
