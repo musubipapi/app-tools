@@ -20,6 +20,9 @@ export const FooterContent = () => {
 
   return (
     <div className="p-2">
+      <div className="text-xs italic text-muted-foreground mb-5">
+        Uses MNCQ algorithm to get the dominant color
+      </div>
       <div>
         <Button
           disabled={!isConvertable || isConverting}
