@@ -3,15 +3,23 @@ import { useDropzone } from "react-dropzone/.";
 import { UploadIcon } from "lucide-react";
 import { useFileStore } from "../../store/file-store";
 
-interface DropZoneProps {}
+interface DropZoneProps {
+  multiple?: boolean;
+  content?: React.ReactNode;
+}
 
-export const DropZone: FC<DropZoneProps> = ({}) => {
-  const { addFile } = useFileStore();
+export const DropZone: FC<DropZoneProps> = ({ content, multiple = false }) => {
+  const { addFile, clearFiles } = useFileStore();
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
-      for (const file of acceptedFiles) {
-        await addFile(file);
+      if (multiple) {
+        for (const file of acceptedFiles) {
+          await addFile(file);
+        }
+      } else {
+        clearFiles();
+        await addFile(acceptedFiles[0]);
       }
     },
     [addFile]
@@ -22,6 +30,7 @@ export const DropZone: FC<DropZoneProps> = ({}) => {
     accept: {
       "image/*": [".png"],
     },
+    maxFiles: multiple ? undefined : 1,
   });
 
   return (
@@ -33,13 +42,7 @@ export const DropZone: FC<DropZoneProps> = ({}) => {
       <div>
         <UploadIcon className="w-10 h-10 text-gray-500 group-hover:text-blue-500 transition-all duration-300 ease-in-out" />
       </div>
-      <div className="text-center font-semibold mt-2">
-        Drag & drop or{" "}
-        <span className="group-hover:text-blue-500 transition-all duration-300 ease-in-out">
-          choose an image
-        </span>{" "}
-        to convert
-      </div>
+      {content}
     </div>
   );
 };
